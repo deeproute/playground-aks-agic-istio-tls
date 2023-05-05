@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: nginx-agic
+  namespace: test-app
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-ingress/gateway-agic # Syntax: <gateway namespace>/<gateway name>
+  http:
+  - route:
+    - destination:
+        host: nginx-agic
+        port:
+          number: 80

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-agic
+  namespace: test-app
+  labels:
+    app: nginx-agic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-agic
+  template:
+    metadata:
+      labels:
+        app: nginx-agic
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80

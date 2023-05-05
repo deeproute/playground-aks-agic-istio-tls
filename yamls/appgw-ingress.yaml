@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: redirect-all-traffic-to-istio
+  namespace: istio-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    # appgw.ingress.kubernetes.io/health-probe-hostname: "localhost"  # This probe doesn't work because istio's gateway health path is http and not https 
+    # appgw.ingress.kubernetes.io/health-probe-port: "15021"          # There isn't a way to specify the health probe protocol as an annotation so App GW
+    # appgw.ingress.kubernetes.io/health-probe-path: "/healthz/ready" # uses the backend protocol (https) as the default.
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+    appgw.ingress.kubernetes.io/backend-protocol: "https"
+    appgw.ingress.kubernetes.io/backend-hostname: "backend.example.com"
+    appgw.ingress.kubernetes.io/appgw-trusted-root-certificate: "backend-tls"
+spec:
+  tls:
+  - secretName: frontend-tls
+    hosts:
+    - frontend.example.com
+  rules:
+  - host: frontend.example.com
+    http:
+      paths:
+      - path: "/*"
+        backend:
+          service:
+            name: istio-gateway
+            port:
+              number: 443
+        pathType: Exact

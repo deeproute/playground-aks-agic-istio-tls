@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: gateway-agic
+  namespace: istio-ingress
+spec:
+  selector:
+    app: istio-gateway
+    istio: gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - backend.example.com
+    tls:
+      httpsRedirect: true # sends 301 redirect for http requests
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - backend.example.com
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: backend-tls
