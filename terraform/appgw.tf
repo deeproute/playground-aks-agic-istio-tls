@@ -128,7 +128,8 @@ resource "azurerm_application_gateway" "appgw" {
       probe,
       ssl_certificate,
       frontend_port,
-      redirect_configuration
+      redirect_configuration,
+      tags
     ]
   }
 
